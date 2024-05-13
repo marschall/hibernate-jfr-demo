@@ -4,18 +4,14 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-//@Table(name = "ACTOR")
 public class Actor {
+  
   @Id
   @Column
-//  @GeneratedValue
-  private short actoriId;
+  private short actorId;
 
   @Column
   private String firstName;
@@ -26,12 +22,12 @@ public class Actor {
   @Column
   private LocalDate lastUpdate;
 
-  public short getActoriId() {
-    return actoriId;
+  public short getActorId() {
+    return actorId;
   }
 
   public void setActoriId(short actoriId) {
-    this.actoriId = actoriId;
+    this.actorId = actoriId;
   }
 
   public String getFirstName() {

@@ -1,25 +1,19 @@
 package com.github.marschall.hibernate.jfr.demo.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
-//@Table(name = "FILM")
 public class Film {
 
   @Id
   @Column
-//  @GeneratedValue
   private short filmId;
 
   @Column
@@ -29,7 +23,7 @@ public class Film {
   private String description;
 
   @Column
-  private Year releaseYear;
+  private LocalDate releaseYear;
 
   @Column
   private Byte languageId;
@@ -80,11 +74,11 @@ public class Film {
     this.description = description;
   }
 
-  public Year getReleaseYear() {
+  public LocalDate getReleaseYear() {
     return releaseYear;
   }
 
-  public void setReleaseYear(Year releaseYear) {
+  public void setReleaseYear(LocalDate releaseYear) {
     this.releaseYear = releaseYear;
   }
 

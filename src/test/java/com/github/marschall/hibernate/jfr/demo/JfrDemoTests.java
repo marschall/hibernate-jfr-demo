@@ -72,7 +72,7 @@ class JfrDemoTests {
 
   void addListener() {
     try (RecordingStream recordingStream = new RecordingStream()) {
-      recordingStream.enable(JdbcPreparedStatementCreationEvent.class).withThreshold(Duration.ofMillis(100L));
+      recordingStream.enable(JdbcPreparedStatementCreationEvent.class);
       recordingStream.enable(JdbcPreparedStatementExecutionEvent.class);
       recordingStream.enable(JdbcBatchExecutionEvent.class);
       recordingStream.enable(FlushEvent.class);
@@ -111,8 +111,9 @@ class JfrDemoTests {
             .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "sa")
             .setProperty(AvailableSettings.JAKARTA_JDBC_PASSWORD, "sa")
             .setProperty(AvailableSettings.STATEMENT_FETCH_SIZE, 100)
-            .setProperty(AvailableSettings.PHYSICAL_NAMING_STRATEGY, CamelCaseToUnderscoresNamingStrategy.class.getName())
-            .setProperty(AvailableSettings.JAKARTA_SHARED_CACHE_MODE, SharedCacheMode.NONE.name())
+//            .setProperty(AvailableSettings.PHYSICAL_NAMING_STRATEGY, CamelCaseToUnderscoresNamingStrategy.class.getName())
+            .setSharedCacheMode(SharedCacheMode.NONE)
+            .setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy())
 //            .setProperty(AvailableSettings.JAKARTA_TRANSACTION_TYPE, PersistenceUnitTransactionType.RESOURCE_LOCAL.name())
             // Create a new SessionFactory
             .buildSessionFactory();
@@ -134,7 +135,7 @@ class JfrDemoTests {
                AND title LIKE :titlePattern
             """, Film.class);
         List<Film> films = filmQuery
-            .setParameter("releaseYear", Year.of(2007))
+            .setParameter("releaseYear", Year.of(2007).atDay(1))
             .setParameter("titlePattern", "F%")
             .getResultList();
         assertNotNull(films);
