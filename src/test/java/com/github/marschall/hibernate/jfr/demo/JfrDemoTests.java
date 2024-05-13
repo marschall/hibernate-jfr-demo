@@ -106,7 +106,7 @@ class JfrDemoTests {
             .addAnnotatedClass(Actor.class)
             .addAnnotatedClass(Film.class)
             // H2 Sakila
-            .setProperty(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:h2:mem:sakila;INIT=RUNSCRIPT FROM '~/src/test/resources/sakila.sql'")
+            .setProperty(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:h2:mem:sakila;INIT=RUNSCRIPT FROM 'src/test/resources/sakila.sql'")
             // Credentials
             .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "sa")
             .setProperty(AvailableSettings.JAKARTA_JDBC_PASSWORD, "sa")
@@ -131,11 +131,11 @@ class JfrDemoTests {
         Query<Film> filmQuery = session.createQuery("""
               FROM Film
              WHERE releaseYear < :releaseYear
-               AND name LIKE :namePattern
+               AND title LIKE :titlePattern
             """, Film.class);
         List<Film> films = filmQuery
             .setParameter("releaseYear", Year.of(2007))
-            .setParameter("namePattern", "F%")
+            .setParameter("titlePattern", "F%")
             .getResultList();
         assertNotNull(films);
         Query<Actor> actorQuery = session.createQuery("""

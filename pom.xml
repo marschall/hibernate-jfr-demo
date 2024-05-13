@@ -41,14 +41,19 @@
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>6.5.0.Final</version>
-      <scope>provided</scope>
+      <version>${hibernate.version}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-jfr</artifactId>
-      <version>6.5.0.Final</version>
+      <version>${hibernate.version}</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>3.0.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -151,15 +156,25 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <release>11</release>
+          <release>17</release>
+          <annotationProcessorPaths>
+            <annotationProcessorPath>
+              <groupId>org.hibernate.orm</groupId>
+              <artifactId>hibernate-jpamodelgen</artifactId>
+              <version>${hibernate.version}</version>
+            </annotationProcessorPath>
+          </annotationProcessorPaths>
+          <compilerArgs>
+            <arg>-AsuppressJakartaDataMetamodel=true</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
-            <link>https://docs.jboss.org/hibernate/orm/5.4/javadocs/</link>
+            <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
+            <link>https://docs.jboss.org/hibernate/orm/5.6/javadocs/</link>
           </links>
         </configuration>
         <executions>
@@ -275,6 +290,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <hibernate.version>6.5.0.Final</hibernate.version>
   </properties>
 
 </project>
