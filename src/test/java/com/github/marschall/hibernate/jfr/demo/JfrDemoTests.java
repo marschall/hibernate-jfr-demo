@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.time.Year;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import com.github.marschall.hibernate.jfr.demo.entity.Actor;
 import com.github.marschall.hibernate.jfr.demo.entity.Film;
+import com.github.marschall.hibernate.jfr.demo.jpa.YearConverter;
 
 import jakarta.persistence.SharedCacheMode;
 import jdk.jfr.Recording;
@@ -55,8 +55,8 @@ class JfrDemoTests {
 
   void startRecording() throws IOException {
     recording = new Recording();
-    recording.enable(JdbcPreparedStatementCreationEvent.class);
-    recording.enable(JdbcPreparedStatementExecutionEvent.class);
+    recording.enable(JdbcPreparedStatementCreationEvent.class).withStackTrace();
+    recording.enable(JdbcPreparedStatementExecutionEvent.class).withStackTrace();
     recording.enable(JdbcBatchExecutionEvent.class);
     recording.enable(FlushEvent.class);
     recording.enable(PartialFlushEvent.class);
@@ -105,6 +105,7 @@ class JfrDemoTests {
         new Configuration()
             .addAnnotatedClass(Actor.class)
             .addAnnotatedClass(Film.class)
+            .addAnnotatedClass(YearConverter.class)
             // H2 Sakila
             .setProperty(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:h2:mem:sakila;INIT=RUNSCRIPT FROM 'src/test/resources/sakila.sql'")
             // Credentials
@@ -135,7 +136,7 @@ class JfrDemoTests {
                AND title LIKE :titlePattern
             """, Film.class);
         List<Film> films = filmQuery
-            .setParameter("releaseYear", Year.of(2007).atDay(1))
+            .setParameter("releaseYear", Year.of(2007))
             .setParameter("titlePattern", "F%")
             .getResultList();
         assertNotNull(films);

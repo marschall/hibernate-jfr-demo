@@ -5,7 +5,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 
+import com.github.marschall.hibernate.jfr.demo.jpa.YearConverter;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -23,7 +26,8 @@ public class Film {
   private String description;
 
   @Column
-  private LocalDate releaseYear;
+  @Convert(converter = YearConverter.class)
+  private Year releaseYear;
 
   @Column
   private Byte languageId;
@@ -74,11 +78,11 @@ public class Film {
     this.description = description;
   }
 
-  public LocalDate getReleaseYear() {
+  public Year getReleaseYear() {
     return releaseYear;
   }
 
-  public void setReleaseYear(LocalDate releaseYear) {
+  public void setReleaseYear(Year releaseYear) {
     this.releaseYear = releaseYear;
   }
 
