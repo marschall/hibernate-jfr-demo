@@ -1,10 +1,16 @@
 package com.github.marschall.hibernate.jfr.demo.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.github.marschall.hibernate.jfr.demo.jpa.SpecialFeaturesConverter;
 import com.github.marschall.hibernate.jfr.demo.jpa.YearConverter;
 
 import jakarta.persistence.Column;
@@ -31,7 +37,7 @@ public class Film {
 
   @Column
   private Byte languageId;
-  
+
   @Column
   private Byte rentalDuration;
 
@@ -48,7 +54,8 @@ public class Film {
   private String rating;
 
   @Column
-  private String specialFeatures;
+  @Convert(converter = SpecialFeaturesConverter.class)
+  private Set<SpecialFeature> specialFeatures;
 
   @Column
   private LocalDateTime lastUpdate;
@@ -134,11 +141,11 @@ public class Film {
     this.rating = rating;
   }
 
-  public String getSpecialFeatures() {
+  public Set<SpecialFeature> getSpecialFeatures() {
     return specialFeatures;
   }
 
-  public void setSpecialFeatures(String specialFeatures) {
+  public void setSpecialFeatures(Set<SpecialFeature> specialFeatures) {
     this.specialFeatures = specialFeatures;
   }
 
@@ -148,6 +155,42 @@ public class Film {
 
   public void setLastUpdate(LocalDateTime lastUpdate) {
     this.lastUpdate = lastUpdate;
+  }
+
+  public enum SpecialFeature {
+
+    TRAILERS("Trailers"),
+    COMMENTARIES("Commentaries"),
+    DELETED_SCENES("Deleted Scenes"),
+    BEHIND_THE_SCENES("Behind the Scenes");
+
+    private static final Map<String, SpecialFeature> LOOKUP;
+
+    static {
+      //@formatter:off
+      LOOKUP = Stream.of(SpecialFeature.values())
+                     .collect(Collectors.toMap(SpecialFeature::getStorageValue, Function.identity()));
+      //@formatter:on
+    }
+
+    private String storageValue;
+
+    public String getStorageValue() {
+      return storageValue;
+    }
+
+    private SpecialFeature(String specialFeature) {
+      this.storageValue = specialFeature;
+    }
+
+    public static SpecialFeature ofStorageValue(String storageValue) {
+      Objects.requireNonNull(storageValue, "storageValue");
+      SpecialFeature specialFeature = LOOKUP.get(storageValue);
+      if (specialFeature == null) {
+        throw new IllegalArgumentException(storageValue + " is not a known special feature");
+      }
+      return specialFeature;
+    }
   }
 
 }

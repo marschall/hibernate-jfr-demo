@@ -1,6 +1,7 @@
 package com.github.marschall.hibernate.jfr.demo;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -18,15 +19,22 @@ import org.hibernate.event.jfr.internal.JdbcBatchExecutionEvent;
 import org.hibernate.event.jfr.internal.JdbcPreparedStatementCreationEvent;
 import org.hibernate.event.jfr.internal.JdbcPreparedStatementExecutionEvent;
 import org.hibernate.event.jfr.internal.PartialFlushEvent;
+import org.hibernate.procedure.ProcedureCall;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.github.marschall.hibernate.jfr.demo.entity.Actor;
+import com.github.marschall.hibernate.jfr.demo.entity.Address;
+import com.github.marschall.hibernate.jfr.demo.entity.Category;
+import com.github.marschall.hibernate.jfr.demo.entity.Country;
 import com.github.marschall.hibernate.jfr.demo.entity.Film;
+import com.github.marschall.hibernate.jfr.demo.entity.FilmText;
+import com.github.marschall.hibernate.jfr.demo.jpa.SpecialFeaturesConverter;
 import com.github.marschall.hibernate.jfr.demo.jpa.YearConverter;
 
+import jakarta.persistence.ParameterMode;
 import jakarta.persistence.SharedCacheMode;
 import jdk.jfr.Recording;
 import jdk.jfr.consumer.RecordedEvent;
@@ -103,20 +111,24 @@ class JfrDemoTests {
   void initializeSessionFactory() {
     sessionFactory =
         new Configuration()
+            // entities
             .addAnnotatedClass(Actor.class)
+            .addAnnotatedClass(Address.class)
+            .addAnnotatedClass(Category.class)
+            .addAnnotatedClass(Country.class)
             .addAnnotatedClass(Film.class)
+            .addAnnotatedClass(FilmText.class)
+            // converters
             .addAnnotatedClass(YearConverter.class)
+            .addAnnotatedClass(SpecialFeaturesConverter.class)
             // H2 Sakila
             .setProperty(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:h2:mem:sakila;INIT=RUNSCRIPT FROM 'src/test/resources/sakila.sql'")
             // Credentials
             .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "sa")
             .setProperty(AvailableSettings.JAKARTA_JDBC_PASSWORD, "sa")
             .setProperty(AvailableSettings.STATEMENT_FETCH_SIZE, 100)
-//            .setProperty(AvailableSettings.PHYSICAL_NAMING_STRATEGY, CamelCaseToUnderscoresNamingStrategy.class.getName())
             .setSharedCacheMode(SharedCacheMode.NONE)
             .setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy())
-//            .setProperty(AvailableSettings.JAKARTA_TRANSACTION_TYPE, PersistenceUnitTransactionType.RESOURCE_LOCAL.name())
-            // Create a new SessionFactory
             .buildSessionFactory();
   }
   
@@ -150,6 +162,23 @@ class JfrDemoTests {
             .setParameter("lastName", "WAHLBERG")
             .getResultList();
         assertNotNull(actors);
+//        ProcedureCall call = session.createStoredProcedureCall("DB_OBJECT_SQL", String.class)
+//          .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+//          .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+//          .registerStoredProcedureParameter(3, String.class, ParameterMode.IN)
+//          .setParameter(1, "TABLE")
+//          .setParameter(2, "PUBLIC")
+//          .setParameter(3, "ACTOR");
+        ProcedureCall call = session.createStoredProcedureCall("DB_OBJECT_SQL", String.class)
+            .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+            .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+            .setParameter(1, "USER")  
+            .setParameter(2, "SA");
+        boolean hasResult = call.execute();
+        assertTrue(hasResult);
+        Object createSa = call.getSingleResult();
+        assertNotNull(createSa);
+
         commit = true;
       } finally {
         if (commit) {

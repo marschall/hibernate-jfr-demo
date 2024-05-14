@@ -1,6 +1,6 @@
 package com.github.marschall.hibernate.jfr.demo.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +20,7 @@ public class Actor {
   private String lastName;
 
   @Column
-  private LocalDate lastUpdate;
+  private LocalDateTime lastUpdate;
 
   public short getActorId() {
     return actorId;
@@ -46,11 +46,11 @@ public class Actor {
     this.lastName = lastName;
   }
 
-  public LocalDate getLastUpdate() {
+  public LocalDateTime getLastUpdate() {
     return lastUpdate;
   }
 
-  public void setLastUpdate(LocalDate lastUpdate) {
+  public void setLastUpdate(LocalDateTime lastUpdate) {
     this.lastUpdate = lastUpdate;
   }
 }
