@@ -28,9 +28,11 @@ import org.junit.jupiter.api.Test;
 import com.github.marschall.hibernate.jfr.demo.entity.Actor;
 import com.github.marschall.hibernate.jfr.demo.entity.Address;
 import com.github.marschall.hibernate.jfr.demo.entity.Category;
+import com.github.marschall.hibernate.jfr.demo.entity.City;
 import com.github.marschall.hibernate.jfr.demo.entity.Country;
 import com.github.marschall.hibernate.jfr.demo.entity.Film;
 import com.github.marschall.hibernate.jfr.demo.entity.FilmText;
+import com.github.marschall.hibernate.jfr.demo.entity.Language;
 import com.github.marschall.hibernate.jfr.demo.jpa.SpecialFeaturesConverter;
 import com.github.marschall.hibernate.jfr.demo.jpa.YearConverter;
 
@@ -115,9 +117,11 @@ class JfrDemoTests {
             .addAnnotatedClass(Actor.class)
             .addAnnotatedClass(Address.class)
             .addAnnotatedClass(Category.class)
+            .addAnnotatedClass(City.class)
             .addAnnotatedClass(Country.class)
             .addAnnotatedClass(Film.class)
             .addAnnotatedClass(FilmText.class)
+            .addAnnotatedClass(Language.class)
             // converters
             .addAnnotatedClass(YearConverter.class)
             .addAnnotatedClass(SpecialFeaturesConverter.class)
@@ -162,18 +166,13 @@ class JfrDemoTests {
             .setParameter("lastName", "WAHLBERG")
             .getResultList();
         assertNotNull(actors);
-//        ProcedureCall call = session.createStoredProcedureCall("DB_OBJECT_SQL", String.class)
-//          .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
-//          .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
-//          .registerStoredProcedureParameter(3, String.class, ParameterMode.IN)
-//          .setParameter(1, "TABLE")
-//          .setParameter(2, "PUBLIC")
-//          .setParameter(3, "ACTOR");
         ProcedureCall call = session.createStoredProcedureCall("DB_OBJECT_SQL", String.class)
-            .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
-            .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
-            .setParameter(1, "USER")  
-            .setParameter(2, "SA");
+          .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+          .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+          .registerStoredProcedureParameter(3, String.class, ParameterMode.IN)
+          .setParameter(1, "TABLE")
+          .setParameter(2, "PUBLIC")
+          .setParameter(3, "ACTOR");
         boolean hasResult = call.execute();
         assertTrue(hasResult);
         Object createSa = call.getSingleResult();
