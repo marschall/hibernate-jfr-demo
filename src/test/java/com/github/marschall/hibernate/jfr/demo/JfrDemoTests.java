@@ -131,6 +131,8 @@ class JfrDemoTests {
             .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "sa")
             .setProperty(AvailableSettings.JAKARTA_JDBC_PASSWORD, "sa")
             .setProperty(AvailableSettings.STATEMENT_FETCH_SIZE, 100)
+            .setProperty("hibernate.type.java_time_use_direct_jdbc", true)
+            .setProperty("hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS", 2)
             .setSharedCacheMode(SharedCacheMode.NONE)
             .setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy())
             .buildSessionFactory();
