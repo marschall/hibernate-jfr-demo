@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration version="2.0" label="Hibernate JFR" description="Minimal configuration that records only Hibernate JFR events." provider="hibernate-jfr-demo">
+
+    <event name="org.hibernate.orm.JdbcPreparedStatementCreation">
+      <setting name="enabled">true</setting>
+      <setting name="stackTrace">true</setting>
+      <setting name="threshold">200 ms</setting>
+    </event>
+
+    <event name="org.hibernate.orm.JdbcPreparedStatementExecution">
+      <setting name="enabled">true</setting>
+      <setting name="stackTrace">true</setting>
+      <setting name="threshold">200 ms</setting>
+    </event>
+
+    <event name="org.hibernate.orm.JdbcBatchExecution">
+      <setting name="enabled">true</setting>
+      <setting name="stackTrace">true</setting>
+      <setting name="threshold">200 ms</setting>
+    </event>
+
+    <event name="org.hibernate.orm.CacheGet">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.CachePut">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.DirtyCalculationEvent">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.FlushEvent">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.JdbcConnectionAcquisition">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.JdbcConnectionRelease">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.PartialFlushEvent">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.PrePartialFlushEvent">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.SessionClosed">
+      <setting name="enabled">false</setting>
+    </event>
+
+    <event name="org.hibernate.orm.SessionOpen">
+      <setting name="enabled">false</setting>
+    </event>
+
+</configuration>
